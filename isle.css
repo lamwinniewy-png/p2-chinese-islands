@@ -1,0 +1,187 @@
+/* ====== 漂浮魔法島 — 夢幻 3D 天空主題（覆蓋舊樣式） ====== */
+:root {
+  --bg: #EFE6FF; --ink: #3E2F5B; --ink2: #6E5F8C; --hot: #E8508F; --pink: #FF8FC0;
+  --glass: rgba(255, 255, 255, .72); --glass-b: rgba(255, 255, 255, .9);
+  --shadow: 0 10px 30px rgba(96, 64, 160, .18), 0 2px 0 rgba(255, 255, 255, .8) inset;
+  --px: 0; --py: 0;
+}
+body { background: #E9DDFF; background-image: none; }
+.sky { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.sky-img { position: absolute; inset: -40px; background: url(img/sky.webp) center/cover no-repeat;
+  transform: translate3d(calc(var(--px) * -26px), calc(var(--py) * -18px), 0) scale(1.04); transition: transform .4s ease-out; }
+.sky::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,.0) 0%, rgba(245,236,255,.35) 100%); }
+.cl { position: absolute; width: 260px; height: 90px; border-radius: 999px; background: radial-gradient(circle at 30% 40%, #fff 0 30%, transparent 31%), radial-gradient(circle at 62% 35%, #fff 0 36%, transparent 37%), radial-gradient(ellipse at 50% 70%, #fff 0 55%, transparent 56%); opacity: .45; filter: blur(8px); animation: drift 70s linear infinite; }
+.c1 { top: 18%; left: -280px; } .c2 { top: 52%; left: -280px; animation-duration: 95s; animation-delay: -30s; transform: scale(.7); }
+.c3 { top: 78%; left: -280px; animation-duration: 120s; animation-delay: -70s; opacity: .55; } .c4 { top: 34%; left: -280px; animation-duration: 85s; animation-delay: -50s; transform: scale(1.3); opacity: .5; }
+@keyframes drift { to { translate: calc(100vw + 560px) 0; } }
+.twk { position: absolute; width: 10px; height: 10px; background: #fff; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: twk 3.2s ease-in-out infinite; }
+.t1 { top: 12%; left: 20%; } .t2 { top: 24%; left: 76%; animation-delay: -1s; } .t3 { top: 64%; left: 8%; animation-delay: -2s; } .t4 { top: 44%; left: 92%; animation-delay: -.5s; } .t5 { top: 86%; left: 56%; animation-delay: -1.6s; }
+@keyframes twk { 0%, 100% { opacity: .2; transform: scale(.6); } 50% { opacity: 1; transform: scale(1.3); } }
+
+.topbar { background: rgba(255, 255, 255, .55); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,.8); box-shadow: 0 4px 24px rgba(120, 80, 190, .12); }
+.logo-heads { display: flex; } .logo-heads img { width: 46px; height: 46px; object-fit: cover; object-position: top; border-radius: 50%; background: #FFE3EF; border: 3px solid #fff; box-shadow: 0 3px 8px rgba(0,0,0,.12); }
+.logo-heads img + img { margin-left: -14px; background: #EDE3FF; }
+.logo-text { color: var(--ink); } .logo-text small { color: var(--hot); }
+.star-pill, .icon-btn { background: var(--glass-b); }
+
+/* ---------- 首頁 ---------- */
+.sky-hero { display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; gap: 10px; padding: 18px 8px 0; min-height: 380px; }
+.kicker { display: inline-block; background: rgba(255,255,255,.8); color: var(--hot); font-weight: 900; font-size: 15px; padding: 6px 14px; border-radius: 999px; letter-spacing: .04em; box-shadow: 0 4px 12px rgba(232, 80, 143, .15); }
+.sky-hero h1 { margin: 14px 0 8px; font-size: clamp(34px, 4.6vw, 56px); font-weight: 900; line-height: 1.12; color: var(--ink); text-shadow: 0 3px 0 #fff, 0 8px 24px rgba(140, 90, 220, .25); }
+.sky-hero h1 em { display: block; font-style: normal; background: linear-gradient(90deg, #FF5FA2, #B07BFF 55%, #4FB6E8); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; filter: drop-shadow(0 3px 0 #fff) drop-shadow(0 6px 14px rgba(160, 100, 230, .3)); }
+.lead { font-size: 19px; font-weight: 700; color: var(--ink2); max-width: 34em; margin: 0 0 14px; }
+.hero-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.countdown, .gem-count { background: var(--glass-b); border-radius: 999px; padding: 10px 18px; font-weight: 900; font-size: 18px; box-shadow: var(--shadow); margin: 0; border: 0; }
+.countdown b, .gem-count b { font-family: var(--f-num); color: var(--hot); font-size: 26px; padding: 0 3px; }
+.voice-note { margin-top: 10px; font-size: 15px; color: var(--ink2); font-weight: 700; }
+.hero-art { position: relative; height: 380px; perspective: 900px; }
+.rainbow { position: absolute; left: 50%; bottom: 8px; width: min(440px, 100%); transform: translateX(-50%); filter: drop-shadow(0 6px 16px rgba(150, 90, 230, .25)); }
+.balloon-wrap { position: absolute; left: 50%; top: 0; width: 230px; margin-left: -115px; animation: float 5s ease-in-out infinite; transform-style: preserve-3d; }
+.balloon { width: 100%; display: block; transform: rotateY(calc(var(--px) * 22deg)) rotateX(calc(var(--py) * -10deg)); transition: transform .5s ease-out; filter: drop-shadow(0 18px 24px rgba(90, 60, 160, .28)); }
+.balloon-fly { position: fixed; z-index: 60; pointer-events: none; filter: drop-shadow(0 18px 24px rgba(90, 60, 160, .3)); }
+@keyframes float { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-16px) rotate(2deg); } }
+.all-gems { margin: 10px 0; text-align: center; font-weight: 900; font-size: 20px; padding: 14px; border-radius: 24px; background: linear-gradient(90deg, #FFE1EF, #EDE1FF, #DDF1FF); box-shadow: var(--shadow); }
+
+.archi { margin-top: 26px; }
+.archi-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; margin: 0 0 4px; }
+.archi-title span { font-size: 28px; font-weight: 900; background: var(--glass-b); padding: 6px 20px; border-radius: 999px; box-shadow: var(--shadow); }
+.archi-title small { font-size: 16px; font-weight: 700; color: var(--ink2); background: rgba(255,255,255,.55); padding: 4px 12px; border-radius: 999px; }
+.isles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px 10px; perspective: 1000px; padding-top: 6px; }
+.isles.big { grid-template-columns: 1fr 1fr 1fr; align-items: center; }
+.isle { position: relative; display: flex; flex-direction: column; align-items: center; padding: 8px 2px 0; transform-style: preserve-3d; }
+.isle:nth-child(even) { margin-top: 46px; }
+.isles.big .isle:nth-child(even) { margin-top: 0; }
+.isle-bob { width: 100%; animation: float 5.5s ease-in-out infinite; animation-delay: calc(var(--d) * -1); transform-style: preserve-3d; }
+.isle-3d { transform: rotateX(calc(var(--py) * 14deg + 6deg)) rotateY(calc(var(--px) * 18deg)); transition: transform .45s cubic-bezier(.2,.8,.2,1); transform-style: preserve-3d; }
+.isle-3d img { width: 100%; max-width: 210px; display: block; margin: 0 auto; filter: drop-shadow(0 16px 18px rgba(90, 60, 160, .22)); transition: transform .35s cubic-bezier(.2,.8,.2,1.4); }
+.isle:hover .isle-3d img, .isle:focus-visible .isle-3d img { transform: translateZ(40px) scale(1.06); }
+.isle:active .isle-3d img { transform: scale(.94); }
+.isle.landing .isle-3d img { animation: land .5s .45s ease-out; }
+@keyframes land { 40% { transform: scale(1.12) translateY(-6px); } 100% { transform: scale(1); } }
+.isle-shadow { width: 56%; height: 16px; margin-top: -2px; border-radius: 50%; background: radial-gradient(ellipse, rgba(90, 60, 160, .22), transparent 70%); animation: shadow 5.5s ease-in-out infinite; animation-delay: calc(var(--d) * -1); }
+@keyframes shadow { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(.8); opacity: .55; } }
+.isle-label { position: relative; margin-top: 4px; width: 100%; max-width: 210px; background: var(--glass); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 2px solid rgba(255,255,255,.95); border-radius: 22px; padding: 8px 10px 10px; text-align: center; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.isle-label .tag, .cloud-card .tag { font-size: 13px; font-weight: 900; color: #fff; background: var(--hot); padding: 2px 10px; border-radius: 999px; }
+.isle-label b { font-size: 21px; font-weight: 900; line-height: 1.25; margin-top: 3px; }
+.isle-label small { font-size: 14px; font-weight: 700; color: var(--ink2); }
+.lstars { color: #FFB800; font-size: 16px; letter-spacing: 2px; min-height: 1em; }
+.isle-label .gem { position: absolute; top: -12px; right: -6px; }
+
+.gem { display: inline-block; width: 30px; height: 30px; vertical-align: middle; clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%); background: linear-gradient(160deg, #fff 0 12%, #D9D2E9 13% 60%, #BDB3D3 61%); opacity: .75; }
+.gem.on { opacity: 1; background: linear-gradient(160deg, #fff 0 14%, var(--gem) 15% 58%, color-mix(in srgb, var(--gem) 70%, #3E2F5B) 59%); filter: drop-shadow(0 0 8px var(--gem)); animation: gemglow 2.4s ease-in-out infinite; }
+.gem.big { width: 44px; height: 44px; }
+@keyframes gemglow { 50% { filter: drop-shadow(0 0 16px var(--gem)) brightness(1.15); } }
+
+.clouds-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 10px; }
+.cloud-card { position: relative; background: #fff; border-radius: 60px 60px 40px 40px; padding: 30px 18px 18px; display: flex; flex-direction: column; align-items: center; gap: 6px; box-shadow: var(--shadow); min-height: 130px; justify-content: center; animation: float 7s ease-in-out infinite; }
+.cloud-card:nth-child(2) { animation-delay: -2s; } .cloud-card:nth-child(3) { animation-delay: -4s; }
+.cloud-card::before, .cloud-card::after { content: ''; position: absolute; background: #fff; border-radius: 50%; z-index: -0; }
+.cloud-card::before { width: 90px; height: 90px; top: -30px; left: 22%; } .cloud-card::after { width: 64px; height: 64px; top: -16px; right: 20%; }
+.cloud-card > * { position: relative; z-index: 1; }
+.cloud-card b { font-size: 22px; font-weight: 900; } .cloud-card small { font-size: 14px; color: var(--ink2); font-weight: 700; }
+.cloud-card.mist { background: linear-gradient(180deg, #fff, #F4ECFF); }
+
+/* ---------- 魔法島頁 ---------- */
+.back { background: var(--glass-b); box-shadow: var(--shadow); }
+.isle-hero { display: grid; grid-template-columns: 300px 1fr; gap: 18px; align-items: center; margin: 8px 0 16px; perspective: 1000px; }
+.isle-stage { display: flex; flex-direction: column; align-items: center; }
+.isle-stage .isle-bob { --d: 0s; }
+.isle-3d.spin img { max-width: 290px; animation: spin3d 9s ease-in-out infinite; }
+@keyframes spin3d { 0%, 100% { transform: rotateY(-16deg); } 50% { transform: rotateY(16deg); } }
+.isle-info { background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 2px solid #fff; border-radius: 30px; padding: 18px 20px; box-shadow: var(--shadow); }
+.isle-info .tag { font-size: 14px; font-weight: 900; color: #fff; background: var(--hot); padding: 3px 12px; border-radius: 999px; }
+.isle-info h2 { font-size: 38px; margin: 8px 0 0; font-weight: 900; }
+.isle-name { margin: 2px 0 10px; font-weight: 900; font-size: 19px; color: var(--ink2); display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+.isle-name small { font-size: 14px; font-weight: 700; width: 100%; }
+.guide { display: flex; align-items: flex-end; gap: 6px; text-align: left; width: 100%; }
+.guide .doll { width: 92px; flex: none; filter: drop-shadow(0 8px 10px rgba(90,60,160,.2)); animation: float 4s ease-in-out infinite; }
+.bubble { position: relative; flex: 1; background: #fff; border-radius: 22px; padding: 12px 16px; font-size: 18px; font-weight: 700; line-height: 1.55; box-shadow: 0 6px 18px rgba(96, 64, 160, .14); margin-bottom: 18px; }
+.bubble::before { content: ''; position: absolute; left: -10px; bottom: 16px; border: 10px solid transparent; border-right-color: #fff; border-left: 0; }
+.bubble b { color: var(--hot); } .bubble .spk { font-size: 16px; }
+.mode-row { grid-template-columns: repeat(var(--n), 1fr); gap: 10px; }
+.mode-btn { background: var(--glass-b); border: 3px solid #fff; border-radius: 22px; font-weight: 900; font-size: 18px; min-height: 70px; box-shadow: var(--shadow); transition: transform .2s; }
+.mode-btn.on { background: linear-gradient(180deg, #fff, #FFE3F0); border-color: var(--hot); transform: translateY(-3px); }
+.mode-btn:active { transform: scale(.96); }
+.learn-card, .reader, .qcard, .cards, .result, .writebox, .sort-stage, .game-how, .game-done { background: var(--glass-b); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 2px solid #fff; box-shadow: var(--shadow); }
+.topic-head.cloudy, .topic-head { background: var(--glass); border-radius: 26px; padding: 8px 18px; box-shadow: var(--shadow); }
+.th-doll { width: 74px; }
+.feedback .doll { width: 70px; flex: none; }
+.res-doll { display: flex; justify-content: center; } .res-doll .doll { width: 140px; animation: float 3s ease-in-out infinite; }
+.gem-won { display: flex; align-items: center; justify-content: center; gap: 12px; font-weight: 900; font-size: 21px; padding: 12px; margin: 8px 0; border-radius: 20px; background: linear-gradient(90deg, #FFF0F7, #F1E8FF); }
+
+/* 筆順魔法 */
+.writebox { border-radius: 30px; padding: 20px; display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: start; }
+.wb-left { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.tianzi { width: 300px; height: 300px; border-radius: 18px; background: #fff; border: 4px solid #F3A5C6; position: relative; display: grid; place-items: center; touch-action: none;
+  background-image: linear-gradient(90deg, transparent calc(50% - 1px), #F7C9DC calc(50% - 1px), #F7C9DC calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(0deg, transparent calc(50% - 1px), #F7C9DC calc(50% - 1px), #F7C9DC calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(45deg, transparent calc(50% - .5px), #FBE1EB calc(50% - .5px), #FBE1EB calc(50% + .5px), transparent calc(50% + .5px)), linear-gradient(-45deg, transparent calc(50% - .5px), #FBE1EB calc(50% - .5px), #FBE1EB calc(50% + .5px), transparent calc(50% + .5px)); }
+.tianzi svg { position: absolute; inset: 0; }
+.hz-static { font-size: 220px; line-height: 1; font-weight: 500; color: var(--ink); font-family: 'Noto Sans TC', serif; }
+.wb-ctrl { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.wb-right h3 { display: flex; align-items: center; gap: 12px; margin: 0; } .wb-right .big { font-size: 64px; font-weight: 900; line-height: 1; }
+.wb-word { font-size: 20px; margin: 8px 0; } .wb-word b { color: var(--hot); font-size: 24px; }
+.wb-tip { font-size: 17px; font-weight: 700; color: var(--ink2); background: #FFF6E0; border-radius: 16px; padding: 10px 14px; }
+.char-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.char-strip .wchip { font-size: 26px; min-width: 54px; min-height: 54px; }
+.wb-note { font-size: 13px; color: var(--ink2); margin: 10px 0 0; }
+
+/* 翻翻記憶卡 */
+.game-how { display: flex; align-items: center; gap: 12px; border-radius: 24px; padding: 10px 18px; margin-bottom: 14px; }
+.game-how .doll { width: 64px; flex: none; } .game-how p { margin: 0; font-size: 18px; font-weight: 700; } .game-how small { font-size: 16px; color: var(--ink2); } .game-how small b { color: var(--hot); font-family: var(--f-num); }
+.mgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; perspective: 1000px; }
+.mgrid.long { grid-template-columns: repeat(3, 1fr); }
+.mcard { position: relative; height: 128px; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.3,1.4,.5,1); }
+.mcard.flip { transform: rotateY(180deg); }
+.mface { position: absolute; inset: 0; border-radius: 22px; display: grid; place-items: center; backface-visibility: hidden; -webkit-backface-visibility: hidden; padding: 8px; font-weight: 900; box-shadow: 0 8px 18px rgba(96,64,160,.16); }
+.mback { background: linear-gradient(145deg, #fff 0, var(--gem) 160%); color: #fff; font-size: 44px; border: 4px solid #fff; text-shadow: 0 2px 6px rgba(0,0,0,.15); }
+.mfront { transform: rotateY(180deg); background: #fff; border: 4px solid var(--gem); font-size: 20px; line-height: 1.35; color: var(--ink); }
+.mfront.a { font-size: 24px; }
+.mcard.got .mfront { background: linear-gradient(180deg, #fff, #EFFFF6); border-color: #38B98A; animation: gotp .5s; }
+@keyframes gotp { 50% { transform: rotateY(180deg) scale(1.08); } }
+.game-done { display: flex; align-items: center; gap: 16px; border-radius: 28px; padding: 18px 22px; margin-top: 16px; }
+.game-done .doll { width: 110px; flex: none; animation: float 3s ease-in-out infinite; } .game-done h3 { margin: 0 0 4px; font-size: 26px; } .game-done p { margin: 0 0 10px; font-size: 18px; }
+.game-done .btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* 魔法鍋分類 */
+.sort-stage { border-radius: 30px; padding: 20px; }
+.potion { position: relative; margin: 0 auto 18px; max-width: 640px; background: linear-gradient(180deg, #fff, #F7F0FF); border: 3px dashed #C9B3F5; border-radius: 26px; padding: 18px 56px 18px 22px; font-size: 26px; font-weight: 900; text-align: center; line-height: 1.6; }
+.potion .speak { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); }
+.potion.into { animation: into .6s ease-in forwards; }
+@keyframes into { to { transform: translateY(30px) scale(.9); opacity: .55; } }
+.pots { display: grid; gap: 12px; }
+.pots.six { grid-template-columns: repeat(6, 1fr); } .pots.two { grid-template-columns: 1fr 1fr; max-width: 600px; margin: 0 auto; }
+.pot { position: relative; height: 120px; border-radius: 26px 26px 50% 50% / 26px 26px 40% 40%; background: linear-gradient(180deg, #8F7BD6, #5E4AAE); color: #fff; box-shadow: 0 10px 0 #45358A, 0 16px 24px rgba(70,50,140,.3); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 18px; overflow: hidden; transition: transform .15s; }
+.pot b { position: relative; font-size: 34px; font-weight: 900; text-shadow: 0 2px 0 rgba(0,0,0,.2); }
+.pots.two .pot b { font-size: 26px; }
+.pot-brew { position: absolute; left: 8%; right: 8%; top: 10px; height: 26px; border-radius: 50%; background: radial-gradient(ellipse, #F9B6F0, #C887F5); box-shadow: 0 0 18px #F9B6F0; animation: brew 2s ease-in-out infinite; }
+@keyframes brew { 50% { transform: scaleX(.92) translateY(2px); filter: brightness(1.2); } }
+.pot:active { transform: translateY(6px); box-shadow: 0 4px 0 #45358A; }
+.pot.right { background: linear-gradient(180deg, #4FD39A, #2A9E6C); box-shadow: 0 10px 0 #1F7A52, 0 0 30px #7CF0BC; }
+.pot.wrong { background: linear-gradient(180deg, #C9C2DD, #A49CBD); box-shadow: 0 10px 0 #8A82A3; animation: shake .4s; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* ---------- 響應式 ---------- */
+@media (max-width: 1000px) {
+  .isles { grid-template-columns: repeat(3, 1fr); }
+  .isle:nth-child(even) { margin-top: 0; } .isles .isle:nth-child(3n+2) { margin-top: 40px; }
+  .isles.big .isle:nth-child(3n+2) { margin-top: 0; }
+  .mode-row { grid-template-columns: repeat(3, 1fr) !important; }
+  .pots.six { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 720px) {
+  .sky-hero { grid-template-columns: 1fr; text-align: center; } .hero-row { justify-content: center; } .lead { margin: 0 auto 14px; }
+  .hero-art { height: 300px; } .balloon-wrap { width: 180px; margin-left: -90px; }
+  .isles, .isles.big { grid-template-columns: 1fr 1fr; } .isles .isle:nth-child(3n+2) { margin-top: 0; } .isles .isle:nth-child(even) { margin-top: 36px; }
+  .clouds-row { grid-template-columns: 1fr; gap: 34px; margin-top: 30px; }
+  .isle-hero { grid-template-columns: 1fr; } .isle-3d.spin img { max-width: 220px; }
+  .writebox { grid-template-columns: 1fr; } .tianzi { width: 280px; height: 280px; }
+  .mgrid, .mgrid.long { grid-template-columns: repeat(2, 1fr); } .mcard { height: 110px; }
+  .mode-row { grid-template-columns: 1fr 1fr !important; }
+  .potion { font-size: 21px; } .pot b { font-size: 28px; } .pots.two .pot b { font-size: 20px; }
+  .logo-text { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+img.doll { height: auto; object-fit: contain; }
+.game-how img.doll { width: 56px; max-height: 76px; }
+.feedback img.doll { width: 64px; max-height: 84px; }
+.clouds-row { margin-top: 44px; }
+.isle-label .gem { width: 24px; height: 24px; top: -10px; right: 8px; }
