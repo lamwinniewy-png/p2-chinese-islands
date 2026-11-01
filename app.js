@@ -52,7 +52,7 @@ function bank(id) {
 /* ---------------- state ---------------- */
 const STORE = 'p2chi-isle-v1';
 let _saved = {}; try { _saved = JSON.parse(window['local' + 'Storage'].getItem(STORE) || '{}'); } catch (e) { }
-const S = Object.assign({ stars: 0, best: {}, mistakes: [], sound: true, slow: false, cards: {}, wrote: {}, heard: {} }, _saved);
+const S = Object.assign({ stars: 0, best: {}, mistakes: [], sound: true, slow: false, cards: {}, wrote: {}, heard: {}, words: {}, got: {} }, _saved);
 const save = () => { try { window['local' + 'Storage'].setItem(STORE, JSON.stringify(S)); } catch (e) { } };
 const STICKERS = ['🎀', '🍓', '🐰', '🧁', '🌈', '🐱', '🍰', '🌸', '🐶', '🍭', '🦄', '🐸', '🍩', '💖', '🎈', '🐻', '🍒', '⭐', '🐹', '🍦', '🦋', '🌷', '🐼', '👑'];
 const stickerAt = i => (i + 1) * 5;
@@ -134,6 +134,7 @@ function home() {
       <div class="balloon-wrap"><img class="balloon" id="balloon" src="img/balloon.webp" alt="蘇蘇和晴晴坐熱氣球" draggable="false"></div>
     </div>
   </section>
+  ${wordsBanner()}
   ${got === 10 ? '<div class="all-gems">🌈 彩虹橋全亮了！你已收集全部字寶石，可以去「寶石城堡」做模擬評估！</div>' : ''}
   <section class="archi">
     <h2 class="archi-title"><span>課文群島</span><small>中書・中作 二上第一冊 第 1、4、8、12、14 課</small></h2>
@@ -159,6 +160,7 @@ function home() {
   </section>`);
   app.querySelectorAll('.isle[data-topic]').forEach(b => b.onclick = () => { sTap(); flyTo(b, () => topic(b.dataset.topic)); });
   app.querySelectorAll('.cloud-card[data-topic]').forEach(b => b.onclick = () => { sTap(); topic(b.dataset.topic); });
+  $('#wordsBtn').onclick = () => { sTap(); flyTo($('#wordsBtn'), wordIsle); };
   $('#mockBtn').onclick = () => flyTo($('#mockBtn'), () => startQuiz('mock'));
   $('#listenBtn').onclick = () => flyTo($('#listenBtn'), () => startQuiz('listen'));
   $('#mistakeBtn').onclick = () => S.mistakes.length ? startQuiz('mistakes') : (popText('錯題魔法瓶是空的！'), sGood());
@@ -238,7 +240,7 @@ function writeMode(t, body) {
         <p class="wb-word">詞語：<b>${wordOf(cur)}</b></p>
         <p class="wb-tip" id="hzMsg">${skip ? '這個字的香港寫法和動畫不同，請跟課本的筆順寫，在空中用手指寫三次。' : '先按「看筆順」，再按「我來寫」，用手指在田字格上一筆一筆寫。寫錯兩次會有提示。'}</p>
         <div class="char-strip">${chars.map(c => `<button class="wchip ${c === cur ? 'on' : ''} ${(S.wrote[t.id] || []).includes(c) ? 'ok' : ''}" data-c="${c}">${c}</button>`).join('')}</div>
-        <p class="wb-note">筆順以課本為準。</p>
+        <p class="wb-note">筆順跟《香港小學學習字詞表》；如與老師所教不同，以老師及課本為準。</p>
       </div>
     </div>`;
     body.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { cur = b.dataset.c; sTap(); draw(); say(wordOf(cur)); });
@@ -249,7 +251,7 @@ function writeMode(t, body) {
       width: size, height: size, padding: 18, showOutline: true, showCharacter: false,
       strokeColor: '#FF5C93', outlineColor: '#F4DCE8', drawingColor: '#4A3446', drawingWidth: 26,
       highlightColor: '#8B6FE0', showHintAfterMisses: 2, strokeAnimationSpeed: 1, delayBetweenStrokes: 220,
-      charDataLoader: (c, ok, fail) => fetch(`hz/${encodeURIComponent(c)}.json`).then(r => r.json()).then(ok).catch(fail),
+      charDataLoader: hzLoader,
     });
     writer.showOutline();
     $('#hzPlay').onclick = () => { sTap(); writer.hideCharacter(); writer.animateCharacter(); };
@@ -263,7 +265,7 @@ function writeMode(t, body) {
           popText(ok ? '寫得好靚！' : '寫完了！');
           $('#hzMsg').textContent = ok ? `寫得好！錯了 ${d.totalMistakes} 次。＋1 ★` : `寫完了，錯了 ${d.totalMistakes} 次，再寫一次會更好！`;
           const w = S.wrote[t.id] = S.wrote[t.id] || [];
-          if (ok && !w.includes(cur)) { w.push(cur); S.stars++; updStars(true); checkSticker(); }
+          if (ok && !w.includes(cur)) { w.push(cur); S.stars++; updStars(true); checkSticker(); checkAwards(); }
           save(); const ch = body.querySelector(`[data-c="${cur}"]`); if (ch && ok) ch.classList.add('ok');
         },
       });
@@ -301,7 +303,7 @@ function matchGame(t, body) {
   });
   function finish() {
     const key = 'm_' + t.id; const first = S.best[key] == null; S.best[key] = Math.min(S.best[key] || 999, moves);
-    S.stars += 2; updStars(true); checkSticker(); save(); confetti(); setTimeout(confetti, 400);
+    S.stars += 2; updStars(true); checkSticker(); save(); checkAwards(); confetti(); setTimeout(confetti, 400);
     $('#mdone').innerHTML = `<div class="game-done">${DOLL(ISLES[t.id].g, 'cheer')}<div><h3>全部配對成功！＋2 ★</h3><p>用了 ${moves} 步${!first ? `（最佳：${S.best[key]} 步）` : ''}。</p>
       <div class="btns"><button class="pill next" id="again">再玩一次</button><button class="pill" id="toQ">💎 去挑戰 10 題</button></div></div></div>`;
     $('#again').onclick = () => matchGame(t, body); $('#toQ').onclick = () => startQuiz(t.id);
@@ -339,7 +341,7 @@ function sortGame(t, body) {
     });
   };
   const done = () => {
-    S.best['s_' + t.id] = Math.max(S.best['s_' + t.id] || 0, score); save(); if (score >= 6) { confetti(); setTimeout(confetti, 400); }
+    S.best['s_' + t.id] = Math.max(S.best['s_' + t.id] || 0, score); save(); checkAwards(); if (score >= 6) { confetti(); setTimeout(confetti, 400); }
     body.innerHTML = `<div class="game-done">${DOLL(ISLES[t.id].g, score >= 6 ? 'cheer' : 'happy')}<div><h3>${score >= 7 ? '魔法大師！' : score >= 5 ? '做得很好！' : '慢慢來，再試一次！'}</h3><p>一次答對 <b>${score}</b> / ${items.length} 句。</p>
       <div class="btns"><button class="pill next" id="again">再玩一次</button><button class="pill" id="toQ">💎 去挑戰 10 題</button></div></div></div>`;
     $('#again').onclick = () => sortGame(t, body); $('#toQ').onclick = () => startQuiz(t.id);
@@ -577,7 +579,7 @@ function result() {
   const newGem = ISLES[Q.mode] && !hadGem && gemGot(Q.mode);
   if (Q.mode === 'mock') S.best.mock = Math.max(S.best.mock || 0, sc);
   if (Q.mode === 'listen') S.best.listen = Math.max(S.best.listen || 0, sc);
-  save();
+  save(); setTimeout(checkAwards, 1200);
   const ratio = sc / total; const st = ratio >= .9 ? '★★★' : ratio >= .7 ? '★★☆' : ratio >= .4 ? '★☆☆' : '☆☆☆';
   const wrong = Q.log.filter(l => !l.ok);
   let breakdown = '';
@@ -598,19 +600,9 @@ function result() {
   if ($('#lrn')) $('#lrn').onclick = () => topic(Q.mode);
 }
 
-function stickers() {
-  view(`<button class="back" id="bk">← 返回天空</button>
-  <div class="topic-head">${DOLL('susu', 'cheer', 'th-doll')}<div><p>每答對 5 題（一次答對）可得一張貼紙</p><h2>我的貼紙簿</h2></div></div>
-  <p style="font-weight:700">你已經有 <span class="hl">${S.stars}</span> 粒星星 ★</p>
-  <div class="sticker-grid">${STICKERS.map((s, i) => S.stars >= stickerAt(i) ? `<div class="sticker">${s}</div>` : `<div class="sticker lock">🔒<small>${stickerAt(i)} ★</small></div>`).join('')}</div>
-  <div style="text-align:center;margin-top:20px"><button class="pill" id="rst">重設進度</button></div>`);
-  $('#bk').onclick = home;
-  let armed = false; $('#rst').onclick = () => { if (!armed) { armed = true; $('#rst').textContent = '再按一次確認清除所有進度'; return; } S.stars = 0; S.best = {}; S.mistakes = []; S.cards = {}; S.wrote = {}; S.heard = {}; save(); updStars(); stickers(); };
-}
-
 /* ---------------- boot ---------------- */
 $('#homeBtn').onclick = home;
-$('#stickerBtn').onclick = stickers;
+$('#stickerBtn').onclick = () => stickers(0);
 const sb = $('#soundBtn'); const setSB = () => sb.textContent = S.sound ? '🔊' : '🔇'; setSB();
 sb.onclick = () => { S.sound = !S.sound; save(); setSB(); };
 updStars();
