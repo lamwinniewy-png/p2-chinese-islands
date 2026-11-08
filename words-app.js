@@ -28,7 +28,7 @@ const STATION_GUIDE = ['susu', 'qing', 'susu', 'qing', 'susu', 'qing', 'susu', '
 const stWords = n => WORDS.slice((n - 1) * 5, n * 5);
 const W_ = () => (S.words = S.words || {});
 const stState = n => (W_()[n] = W_()[n] || { heard: [], wrote: [], quiz: 0, dict: 0, done: [0, 0, 0, 0] });
-const stUnlocked = n => n === 1 || stState(n - 1).done[2];
+const stUnlocked = n => true; // 八站全部開放
 const stepOpen = (n, k) => k === 0 || stState(n).done[k - 1];
 const stDoneCount = () => [1, 2, 3, 4, 5, 6, 7, 8].filter(n => stState(n).done[2]).length;
 const STEP_LBL = ['① 讀一讀', '② 寫一寫', '③ 考一考', '④ 聽寫挑戰'];
