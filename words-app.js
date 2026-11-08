@@ -183,7 +183,7 @@ function writeWords(n, ws, s, body, g, dict) {
         <p class="ww-k">${dict ? '聽寫挑戰' : '寫一寫'} · 第 ${wi + 1} / 5 個詞語</p>
         <div class="ww-slots">${[...w.w].map((x, j) => j < ci ? glyphBox(x, 'done') : j === ci ? `<span class="slot cur">${dict ? '?' : x}</span>` : `<span class="slot">${dict ? '' : x}</span>`).join('')}</div>
         ${dict ? `<p class="wb-word">聽聽句子：<b>${esc(w.sent.replace(w.w, '＿'.repeat(w.w.length)))}</b></p>` : `<p class="wb-word">${w.jp} · ${esc(w.tip)}</p>`}
-        <p class="wb-tip" id="hzMsg">${dict ? '聽清楚詞語，在田字格寫出來。寫錯三次會有提示。' : '跟着淡淡的字一筆一筆寫，寫錯兩次會有提示。'}</p>
+        <p class="wb-tip" id="hzMsg">${dict ? '聽清楚詞語，在田字格寫出來。寫錯三次會有提示，四次會自動完成這一筆。' : '跟着淡淡的字一筆一筆寫，寫錯兩次會有提示，寫錯三次會自動幫你完成這一筆。'}</p>
         <div class="char-strip">${ws.map((x, i) => `<span class="wchip wide ${i === wi ? 'on' : ''} ${i < wi ? 'ok' : ''}">${dict && i >= wi ? '？'.repeat(x.w.length) : x.w}</span>`).join('')}</div>
         <p class="wb-note">筆順跟《香港小學學習字詞表》；如與老師所教不同，以老師及課本為準。</p>
       </div></div>`;
@@ -205,12 +205,13 @@ function writeWords(n, ws, s, body, g, dict) {
       $('#hzSay').onclick = speak; if (ci === 0) setTimeout(speak, 300);
     }
     const quiz = () => writer.quiz({
+      leniency: 1.8, acceptBackwardsStrokes: true, markStrokeCorrectAfterMisses: dict ? 4 : 3,
       onMistake: () => { sBad(); wordMiss++; }, onCorrectStroke: () => sTap(),
       onComplete: () => {
         sGood(); ci++;
         if (ci < w.w.length) { popText(pick(['寫得好！', '好靚呀！', '繼續！'])); setTimeout(draw, 650); return; }
         // 一個詞語寫完
-        const good = wordMiss <= w.w.length * 3;
+        const good = wordMiss <= w.w.length * 5;
         if (dict) { res.push({ w, good, miss: wordMiss }); if (good) { S.stars++; updStars(true); checkSticker(); } }
         else if (!s.wrote.includes(wi)) { s.wrote.push(wi); S.stars++; updStars(true); checkSticker(); }
         save(); confetti(); popText(dict ? (good ? '答對了！' : '寫完了！') : '詞語寫好了！');

@@ -238,7 +238,7 @@ function writeMode(t, body) {
       <div class="wb-right">
         <h3><span class="big">${cur}</span>${t.strokes[cur] ? `<span class="chip c-butter">${t.strokes[cur]} 畫</span>` : ''}</h3>
         <p class="wb-word">詞語：<b>${wordOf(cur)}</b></p>
-        <p class="wb-tip" id="hzMsg">${skip ? '這個字的香港寫法和動畫不同，請跟課本的筆順寫，在空中用手指寫三次。' : '先按「看筆順」，再按「我來寫」，用手指在田字格上一筆一筆寫。寫錯兩次會有提示。'}</p>
+        <p class="wb-tip" id="hzMsg">${skip ? '這個字的香港寫法和動畫不同，請跟課本的筆順寫，在空中用手指寫三次。' : '先按「看筆順」，再按「我來寫」，用手指在田字格上一筆一筆寫。寫錯兩次會有提示，寫錯三次會自動幫你完成這一筆。'}</p>
         <div class="char-strip">${chars.map(c => `<button class="wchip ${c === cur ? 'on' : ''} ${(S.wrote[t.id] || []).includes(c) ? 'ok' : ''}" data-c="${c}">${c}</button>`).join('')}</div>
         <p class="wb-note">筆順跟《香港小學學習字詞表》；如與老師所教不同，以老師及課本為準。</p>
       </div>
@@ -258,10 +258,11 @@ function writeMode(t, body) {
     $('#hzQuiz').onclick = () => {
       sTap(); $('#hzMsg').textContent = '一筆一筆寫，加油！';
       writer.quiz({
+        leniency: 1.8, acceptBackwardsStrokes: true, markStrokeCorrectAfterMisses: 3,
         onMistake: () => sBad(),
         onCorrectStroke: () => sTap(),
         onComplete: d => {
-          const ok = d.totalMistakes <= 2; sGood(); confetti();
+          const ok = d.totalMistakes <= 5; sGood(); confetti();
           popText(ok ? '寫得好靚！' : '寫完了！');
           $('#hzMsg').textContent = ok ? `寫得好！錯了 ${d.totalMistakes} 次。＋1 ★` : `寫完了，錯了 ${d.totalMistakes} 次，再寫一次會更好！`;
           const w = S.wrote[t.id] = S.wrote[t.id] || [];
